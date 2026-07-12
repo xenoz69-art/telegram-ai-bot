@@ -20,9 +20,9 @@ async def get_ai_response(prompt: str) -> str:
         "Content-Type": "application/json"
     }
     data = {
-        "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": prompt}],
-        "max_tokens": 500
+    "model": "qwen3.6-35b-coding",  # ✅ pakai model dari dashboard
+    "messages": [{"role": "user", "content": prompt}],
+    "max_tokens": 500
     }
     try:
         response = requests.post(BLUESMINDS_URL, headers=headers, json=data, timeout=30)
