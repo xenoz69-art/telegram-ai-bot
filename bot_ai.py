@@ -5,8 +5,8 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 # ===== KONFIGURASI =====
-TELEGRAM_TOKEN = os.environ.get("8994160790:AAEZHwLstbqpPjnRGL83z9kPdRvjfRDa9_o")
-BLUESMINDS_API_KEY = os.environ.get("sk-kmPjhPDyJPRpfk05uIaNDDIoUdvbW1bJ85lEelky78a3fEhH")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+BLUESMINDS_API_KEY = os.environ.get("BLUESMINDS_API_KEY")
 BLUESMINDS_URL = "https://api.bluesminds.com/v1/chat/completions"
 
 # ===== LOGGING =====
