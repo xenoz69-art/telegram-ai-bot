@@ -16,29 +16,32 @@ logger = logging.getLogger(__name__)
 # ===== FUNGSI PANGGIL AI =====
 async def get_ai_response(prompt: str) -> str:
     headers = {
-        "x-api-key": ANTHROPIC_API_KEY,  # Header khusus untuk Anthropic
-        "anthropic-version": "2023-06-01", # Versi API
+        "x-api-key": ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
         "Content-Type": "application/json"
     }
     data = {
-        "model": "claude-3-sonnet-20240229", # atau model lain
+        "model": "claude-3-sonnet-20240229",
         "max_tokens": 500,
         "messages": [{"role": "user", "content": prompt}]
     }
     try:
-        # Gunakan AEROLINK_CHAT_URL yang sudah didefinisikan
-        response = requests.post(AEROLINK_CHAT_URL, headers=headers, json=data, timeout=30)
+        # 🔥 PERBAIKAN: Gunakan ANTHROPIC_BASE_URL langsung
+        response = requests.post(
+            f"{ANTHROPIC_BASE_URL}/v1/messages",  # <- endpoint lengkap
+            headers=headers,
+            json=data,
+            timeout=30
+        )
         response.raise_for_status()
-        # Perhatikan: struktur respons Anthropic berbeda dengan OpenAI
-        # Ini contoh untuk respons dari /v1/messages
-        return response.json()["content"][0]["text"] 
+        return response.json()["content"][0]["text"]
     except Exception as e:
         logger.error(f"AI Error: {e}")
         return "Maaf, terjadi kesalahan."
 
 # ===== HANDLER =====
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Halo! Kirim pesan apa saja, saya akan balas dengan AI.")
+    await update.message.reply_text("Halo! Kirim pesan apa saja, saya akan balas dengan AI Claude.")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_message = update.message.text
@@ -57,7 +60,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_error_handler(error_handler)
-    print("Bot berjalan...")
+    print("Bot berjalan dengan Claude via Aerolink...")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
