@@ -7,7 +7,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # ===== KONFIGURASI =====
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 ANTHROPIC_API_KEY = os.environ.get("BLUESMINDS_API_KEY")
-ANTHROPIC_BASE_URL = "https://api.bluesminds.com/v1/chat/completions"
+ANTHROPIC_BASE_URL = "https://capi.aerolink.lat/"
 
 # ===== LOGGING =====
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
