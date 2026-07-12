@@ -6,8 +6,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 
 # ===== KONFIGURASI =====
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
-BLUESMINDS_API_KEY = os.environ.get("BLUESMINDS_API_KEY")
-BLUESMINDS_URL = "https://api.bluesminds.com/v1/chat/completions"
+ANTHROPIC_API_KEY = os.environ.get("BLUESMINDS_API_KEY")
+ANTHROPIC_BASE_URL = "https://api.bluesminds.com/v1/chat/completions"
 
 # ===== LOGGING =====
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
@@ -16,18 +16,22 @@ logger = logging.getLogger(__name__)
 # ===== FUNGSI PANGGIL AI =====
 async def get_ai_response(prompt: str) -> str:
     headers = {
-        "Authorization": f"Bearer {BLUESMINDS_API_KEY}",
+        "x-api-key": ANTHROPIC_API_KEY,  # Header khusus untuk Anthropic
+        "anthropic-version": "2023-06-01", # Versi API
         "Content-Type": "application/json"
     }
     data = {
-    "model": "qwen3.6-35b-coding",  # ✅ pakai model dari dashboard
-    "messages": [{"role": "user", "content": prompt}],
-    "max_tokens": 500
+        "model": "claude-3-sonnet-20240229", # atau model lain
+        "max_tokens": 500,
+        "messages": [{"role": "user", "content": prompt}]
     }
     try:
-        response = requests.post(BLUESMINDS_URL, headers=headers, json=data, timeout=30)
+        # Gunakan AEROLINK_CHAT_URL yang sudah didefinisikan
+        response = requests.post(AEROLINK_CHAT_URL, headers=headers, json=data, timeout=30)
         response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        # Perhatikan: struktur respons Anthropic berbeda dengan OpenAI
+        # Ini contoh untuk respons dari /v1/messages
+        return response.json()["content"][0]["text"] 
     except Exception as e:
         logger.error(f"AI Error: {e}")
         return "Maaf, terjadi kesalahan."
